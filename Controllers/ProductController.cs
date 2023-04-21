@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
+
 using Microsoft.Extensions.DependencyInjection;
-
-
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ProjectSalonReact.Controllers
 {
@@ -84,26 +84,61 @@ namespace ProjectSalonReact.Controllers
             var dateA = form.DateAdmission;
             var filePath = string.Empty;
             var guid = Guid.NewGuid();
+            var imageNameGlobal=""; 
+            
 
 
             if (form.Image != null)
             {
-                // Save image to wwwroot directory
+
                 var fileName = Path.GetFileNameWithoutExtension(image.FileName);
                 var fileExtension = Path.GetExtension(image.FileName);
                 var uniqueFileName = $"{guid}_{DateTime.Now:yyyyMMddHHmmssfff}{fileExtension}";
-                //var uniqueFileName = $"{fileName}_{DateTime.Now:yyyyMMddHHmmssfff}{fileExtension}";
-                filePath = Path.Combine(_environment.WebRootPath, "images", uniqueFileName);
-              //  filePath = Path.Combine(_environment.WebRootPath, "images", fileName);
+                imageNameGlobal = uniqueFileName;
+                filePath = Path.Combine(_environment.ContentRootPath, "ClientApp", "src", "images", uniqueFileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await image.CopyToAsync(stream);
                 }
+
+
+                //// Save image to wwwroot directory
+                //var fileName = Path.GetFileNameWithoutExtension(image.FileName);
+                //var fileExtension = Path.GetExtension(image.FileName);
+                //var uniqueFileName = $"{guid}_{DateTime.Now:yyyyMMddHHmmssfff}{fileExtension}";
+                ////var uniqueFileName = $"{fileName}_{DateTime.Now:yyyyMMddHHmmssfff}{fileExtension}";
+                //filePath = Path.Combine(_environment.WebRootPath, "images", uniqueFileName);
+
+                ////  filePath = Path.Combine(_environment.WebRootPath, "images", fileName);
+                //using (var stream = new FileStream(filePath, FileMode.Create))
+                //{
+                //    await image.CopyToAsync(stream);
+                //}
+
+                //aparte de guardar en wwwroot guarda en public src
+
+
+                //var publicImagesPath = Path.Combine(_environment.ContentRootPath, "clientApp", "public", "assets", "images");
+                //var publicFilePath = Path.Combine(publicImagesPath, uniqueFileName);
+                //using (var stream = new FileStream(publicFilePath, FileMode.Create))
+                //{
+                //    await image.CopyToAsync(stream);
+                //}
+
+
             }
 
 
             // Save data to SQL Server
-            var productNew = new Product { NameProduct = name, Description = description, ImagePath = filePath, Stocks = stocks, DateAdmission = dateA };
+            var productNew = new Product { 
+                NameProduct = name, 
+                Description = description, 
+                ImagePath = filePath, 
+                Stocks = stocks, 
+                DateAdmission = dateA, 
+                imageName = imageNameGlobal };
+
+
             _dbcontext.Products.Add(productNew);
             await _dbcontext.SaveChangesAsync();
 
@@ -111,11 +146,16 @@ namespace ProjectSalonReact.Controllers
 
         }
 
-
-
-
-
-
+        [HttpGet]
+        [Route("Cards")]
+        public ActionResult<IEnumerable<Product>> GetProductos()
+        {
+            using (var context = new ProjectSalonContext())
+            {
+                var productos = context.Products.ToList();
+                return productos;
+            }
+        }
 
 
         [HttpDelete]
@@ -125,18 +165,7 @@ namespace ProjectSalonReact.Controllers
            // Product product = _dbcontext.Products.Find(id);
 
             Product product = await _dbcontext.Products.FindAsync(id);
-            //if (product == null)
-            //{
-            //    return NotFound();
-            //}
-            //if (!string.IsNullOrEmpty(product.ImagePath))
-            //{
-            //    var imagePath = Path.Combine(_environment.WebRootPath, product.ImagePath.Substring(1));
-            //    if (System.IO.File.Exists(imagePath))
-            //    {
-            //        System.IO.File.Delete(imagePath);
-            //    }
-            //}
+          
 
             if (System.IO.File.Exists(product.ImagePath))
             {

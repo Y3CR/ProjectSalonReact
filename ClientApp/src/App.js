@@ -8,37 +8,38 @@ import Skills from "./Components/Skills";
 import Services from "./Components/Services";
 import Contact from "./Components/Contact";
 import Producto from "./Components/Producto";
+//import { Children } from "react";
 
 const App = () => {
-  return (
-    <div>
-      <Router>
-        <Navbar /> 
-        <Switch>
-          <Route path="/" component={Home} exact>
-            <Home />
-          </Route>
-          <Route path="/producto" component={Producto} exact>
-            <Producto />
-          </Route>
-          <Route path="/about" component={About} exact>
-            <About />
-          </Route>
-          <Route path="/skills" component={Skills} exact>
-            <Skills />
-          </Route>
-          <Route path="/services" component={Services} exact>
-            <Services />
-          </Route>
-          <Route path="/contact" component={Contact} exact>
-            <Contact />
-          </Route>
-        </Switch>
-      </Router>
-    </div>
+    return (
+        <div>
+            <Router>
+                <Navbar />
+                <Switch>
+                    <Route path="/" component={Home} exact>
+                        <Home />
+                    </Route>
+                    <Route path="/producto" component={Producto} exact>
+                        <Producto />
+                    </Route>
+                    <Route path="/about" component={About} exact>
+                        <About />
+                    </Route>
+                    <Route path="/skills" component={Skills} exact>
+                        <Skills />
+                    </Route>
+                    <Route path="/services" component={Services} exact>
+                        <Services />
+                    </Route>
+                    <Route path="/contact" component={Contact} exact>
+                        <Contact />
+                    </Route>
+                </Switch>
+            </Router>
+        </div>
 
 
-  );
+    );
 };
 
 export default App;

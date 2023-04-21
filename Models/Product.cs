@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectSalonReact.Models;
 
@@ -14,6 +15,9 @@ public partial class Product
     public int? Stocks { get; set; }
 
     public string? ImagePath { get; set; }
+
+    [NotMapped]
+    public string? imageName { get; set; }
 
     public DateTime? DateAdmission { get; set; }
 }

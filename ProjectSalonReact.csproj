@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <Folder Include="ClientApp\src\Components\" />
+    <Folder Include="ClientApp\src\images\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
